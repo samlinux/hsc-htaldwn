@@ -1,0 +1,21 @@
+{
+  "name": "app01",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -t 5000 tests/spec.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fabric-ca-client": "^1.4.8",
+    "fabric-network": "^1.4.8",
+    "uuid": "^8.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.2",
+    "supertest": "^4.0.2"
+  },
+  "description": ""
+}
