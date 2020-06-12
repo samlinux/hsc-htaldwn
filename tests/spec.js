@@ -4,7 +4,7 @@ const api = supertest('localhost:3000');
 
 describe("Hyperledger Fabric API tests", function() {
   it("checks if api is running", async function() {
-    //this.skip();
+    this.skip();
     let result = await api.get('/')
     console.log(result.body)
   }) 
@@ -17,7 +17,7 @@ describe("Hyperledger Fabric API tests", function() {
   })
   
   it("send a key value paire", async function() {
-    //this.skip();
+    this.skip();
     let payload = {
       key:'msg-'+uuidv4(),
       value: 'value-'+new Date()

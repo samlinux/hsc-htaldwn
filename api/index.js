@@ -3,14 +3,14 @@
  * @rbole 
  */
 
-// we include some system requironments
+// we include some system requironments 
 const express = require('express');
 const bodyParser = require('body-parser');
 
 // express base instance
 const app = express();
 
-// we need the bodyParser because of the post request
+// we need the bodyParser because of the post request 
 app.use(bodyParser.json());      
 app.use(bodyParser.urlencoded({ 
   extended: true
@@ -22,10 +22,10 @@ let config = {
   cc:'sacc',
   userName: 'user1-mars.morgen.net',
   ccpPath: '../marsConnection.yaml',
-  walletPath: '../identityManagement/wallet'
+  walletPath: '../app01/identityManagement/wallet'
 }
 
-// we include our API endpoint code
+// we include our API endpoint code 
 let getKeyData = require('./index-query');
 let setData = require('./index-set');
 

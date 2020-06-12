@@ -28,12 +28,17 @@ module.exports = async function (req, config) {
 
   try {
     // Submit the specified transaction.
-    await contract.submitTransaction('set', queryKey, queryValue);
-
+    let response = await contract.submitTransaction('set', queryKey, queryValue);
+    let jsonResponse = response.toString('utf8');
+   
     // Disconnect from the gateway.
     await gateway.disconnect();
 
-    let result = {result:'Transaction has been successfully submitted. Key: '+queryKey};
+    let result = {
+      result:'Transaction has been successfully submitted', 
+      key: queryKey, 
+      value:jsonResponse
+    };
     return result;
   }
   catch(error){
@@ -41,3 +46,4 @@ module.exports = async function (req, config) {
     return result;
   }
 }
+
