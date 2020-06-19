@@ -5,48 +5,57 @@
 'use strict';
 let config = {
   channel: 'channel1',
-  cc:'sacc',
+  cc:'sacc3',
   userName: 'user1-mars.morgen.net',
-  ccpPath: 'marsConnection.yaml'
+  ccpPath: '../marsConnection.yaml'
 }
 
-  const { FileSystemWallet, Gateway } = require('fabric-network');
-  const path = require('path');
-  const ccpPath = path.resolve(__dirname, config.ccpPath);
+const { FileSystemWallet, Gateway } = require('fabric-network');
+const path = require('path');
+const { exit } = require('process');
+const ccpPath = path.resolve(__dirname, config.ccpPath);
 
-  let queryKey = 'msg3';
-  let queryValue = 'test-'+ new Date().toISOString();
+let myArgs = process.argv.slice(2);
+let queryKey = '', queryValue = '';
 
-  async function init (){
-    // Create a new file system based wallet for managing identities.
-    const walletPath = path.join(process.cwd(), 'wallet');
-    const wallet = new FileSystemWallet(walletPath);
+if(myArgs.length == 2){
+  queryKey = myArgs[0];
+  queryValue = myArgs[1];
+} else{
+  console.log("too few parameters ");
+  exit(1);
+} 
 
-    // Create a new gateway for connecting to our peer node.
-    const gateway = new Gateway();
-    await gateway.connect(ccpPath, { wallet, identity: config.userName, discovery: { enabled: true, asLocalhost: false } });
+async function init (){
+  // Create a new file system based wallet for managing identities.
+  const walletPath = path.join(process.cwd(), '../identityManagement/wallet/');
+  const wallet = new FileSystemWallet(walletPath);
 
-    // Get the network (channel) our contract is deployed to.
-    const network = await gateway.getNetwork(config.channel);
+  // Create a new gateway for connecting to our peer node.
+  const gateway = new Gateway();
+  await gateway.connect(ccpPath, { wallet, identity: config.userName, discovery: { enabled: true, asLocalhost: false } });
 
-    // Get the contract from the network.
-    const contract = network.getContract(config.cc);
+  // Get the network (channel) our contract is deployed to.
+  const network = await gateway.getNetwork(config.channel);
 
-    try {
-      // Submit the specified transaction.
-      await contract.submitTransaction('set', queryKey, queryValue);
+  // Get the contract from the network.
+  const contract = network.getContract(config.cc);
 
-      // Disconnect from the gateway.
-      await gateway.disconnect();
+  try {
+    // Submit the specified transaction.
+    await contract.submitTransaction('set', queryKey, queryValue);
 
-      let result = {result:'Transaction has been successfully submitted. Key: '+queryKey};
-      return result;
-    }
-    catch(error){
-      let result = {result:'Failed to submit transaction: '+error};
-      return result;
-    }
+    // Disconnect from the gateway.
+    await gateway.disconnect();
+
+    let result = {result:'Transaction has been successfully submitted. Key: '+queryKey};
+    console.log(result);
   }
-  
-  init();
+  catch(error){
+    let result = {result:'Failed to submit transaction: '+error};
+    console.log(result);
+  }
+}
+
+init();
 

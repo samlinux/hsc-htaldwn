@@ -1,5 +1,5 @@
 /**
- * cli query 
+ * cli query - get all keys
  */
 
 let config = {
@@ -13,13 +13,6 @@ const { FileSystemWallet, Gateway } = require('fabric-network');
 const path = require('path');
 const ccpPath = path.resolve(__dirname, config.ccpPath);
 
-// get the key from the post request
-let myArgs = process.argv.slice(2);
-let queryKey = "msg2";
-if(myArgs.length == 1){
-  queryKey = myArgs[0];
-}
-
 async function init() {
   // Create a new file system based wallet for managing identities.
   const walletPath = path.join(process.cwd(), '../identityManagement/wallet');
@@ -30,7 +23,7 @@ async function init() {
   await gateway.connect(ccpPath, { 
     wallet, 
     identity: config.userName, 
-    discovery: { enabled: true, asLocalhost: true } });
+    discovery: { enabled: true, asLocalhost: false } });
 
   // Get the network (channel) our contract is deployed to.
   const network = await gateway.getNetwork(config.channel);
@@ -40,17 +33,12 @@ async function init() {
 
   // Evaluate the specified transaction.
   try {
-    let result = await contract.evaluateTransaction('query',queryKey);
+    let result = await contract.evaluateTransaction('all');
     
     // Disconnect from the gateway.
     await gateway.disconnect();
   
-    // finale object
-    let r = {
-      key:queryKey,
-      value:result.toString()
-    };
-    console.log(r);
+    console.log(result.toString());
   } catch(e){
     console.log(e)
   }
